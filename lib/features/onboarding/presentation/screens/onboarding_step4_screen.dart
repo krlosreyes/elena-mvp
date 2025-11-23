@@ -131,9 +131,12 @@ class OnboardingStep4Screen extends ConsumerWidget {
               // BOTÓN FINAL
               // ------------------------------------------------
               ElenaButtonPrimary(
-                text: "Continuar al Panel",
-                onPressed: () => context.go('/dashboard'),
-              ),
+              text: "Continuar",
+              onPressed: () async {
+                await ref.read(onboardingProvider.notifier).saveInitialComposition();
+                context.go('/dashboard');
+              },
+            ),
             ],
           ),
         ),

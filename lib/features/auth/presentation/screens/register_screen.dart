@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../ui/elena_ui_system.dart';
+import '../../../../ui/layouts/elena_centered_layout.dart';
+
 import '../../providers/auth_provider.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
@@ -25,6 +28,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
     try {
       final repo = ref.read(authRepositoryProvider);
+
       await repo.register(
         emailController.text.trim(),
         passwordController.text.trim(),
@@ -47,9 +51,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     return Scaffold(
       backgroundColor: ElenaColors.background,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Center(
+        child: ElenaCenteredLayout(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
             child: SingleChildScrollView(
               child: ElenaCard(
                 child: Column(
@@ -81,6 +85,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             controller: passwordController,
                             label: "Contraseña (mínimo 6 caracteres)",
                             keyboardType: TextInputType.visiblePassword,
+                            obscureText: true,
                             validator: (v) {
                               if (v == null || v.isEmpty) return "Campo requerido";
                               if (v.length < 6) return "Mínimo 6 caracteres";
@@ -105,7 +110,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     ElenaButtonSecondary(
                       text: "Ya tengo una cuenta",
                       onPressed: () => context.go('/'),
-                    )
+                    ),
                   ],
                 ),
               ),

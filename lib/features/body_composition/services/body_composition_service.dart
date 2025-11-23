@@ -3,7 +3,10 @@ import 'dart:math';
 double log10(num x) => log(x) / ln10;
 
 class BodyCompositionService {
-  // Navy Method (US Navy formula)
+
+  // -------------------------------------------
+  // % GRASA - Navy Method
+  // -------------------------------------------
   static double calculateBodyFat({
     required String sex,
     required double neck,
@@ -22,7 +25,9 @@ class BodyCompositionService {
     }
   }
 
-  // BMR
+  // -------------------------------------------
+  // BMR - Mifflin St Jeor
+  // -------------------------------------------
   static double calculateBMR({
     required String sex,
     required double weight,
@@ -36,7 +41,9 @@ class BodyCompositionService {
     }
   }
 
-  // TDEE multiplier
+  // -------------------------------------------
+  // TDEE
+  // -------------------------------------------
   static double activityMultiplier(int workoutDays) {
     if (workoutDays == 0) return 1.35;
     if (workoutDays <= 2) return 1.45;
@@ -45,7 +52,9 @@ class BodyCompositionService {
     return 1.75;
   }
 
-  // Objetivo recomendado automático
+  // -------------------------------------------
+  // META AUTOMÁTICA
+  // -------------------------------------------
   static String recommendedGoal(double bf, String sex) {
     if (sex == "male") {
       if (bf >= 25) return "lose_fat";
@@ -56,5 +65,53 @@ class BodyCompositionService {
       if (bf >= 22) return "recomposition";
       return "gain_muscle";
     }
+  }
+
+  // -------------------------------------------
+  // CALORÍAS OBJETIVO
+  // -------------------------------------------
+  static double calculateCalorieGoal({
+    required double tdee,
+    required String goal,
+  }) {
+    switch (goal) {
+      case "lose_fat":
+        return tdee - 300;
+      case "gain_muscle":
+        return tdee + 300;
+      default:
+        return tdee - 200; // recomposición
+    }
+  }
+
+  // -------------------------------------------
+  // PROTEÍNA
+  // -------------------------------------------
+  static double proteinTarget(double leanMassKg) {
+    return leanMassKg * 2.0;
+  }
+
+  // -------------------------------------------
+  // TARGET BODYFAT
+  // -------------------------------------------
+  static double targetBodyFat(String sex, double currentBf) {
+    if (sex == "male") {
+      if (currentBf >= 25) return 15;
+      if (currentBf >= 15) return 12;
+      return 10;
+    } else {
+      if (currentBf >= 32) return 22;
+      if (currentBf >= 22) return 20;
+      return 18;
+    }
+  }
+
+  // -------------------------------------------
+  // OBJETIVO DE MASA MAGRA
+  // -------------------------------------------
+  static double leanMassTargetGain(String goal) {
+    if (goal == "gain_muscle") return 2.5;
+    if (goal == "recomposition") return 1.5;
+    return 0.5; // perder grasa
   }
 }

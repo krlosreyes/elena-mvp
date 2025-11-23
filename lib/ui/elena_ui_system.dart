@@ -17,17 +17,17 @@ class ElenaColors {
   static const Color success = Color(0xFF2ECC71);
   static const Color warning = Color(0xFFF39C12);
   static const Color error = Color(0xFFE74C3C);
+
+  // Gamificación
   static const Color xp = Color(0xFFFFD700);
+  static const Color streak = Color(0xFFFF5722);      // ← Necesario para Dashboard
 }
 
 /// ===============================================================
 ///                         TEXT SYSTEM
 /// ===============================================================
-/// Tipografías alineadas al estilo minimalista-health de Elena
-/// ===============================================================
 
 class ElenaText {
-  // TITLES
   static const title = TextStyle(
     fontSize: 26,
     fontWeight: FontWeight.w700,
@@ -40,14 +40,12 @@ class ElenaText {
     color: ElenaColors.textMedium,
   );
 
-  // LABELS
   static const label = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w600,
     color: ElenaColors.textDark,
   );
 
-  // BODY TEXTS
   static const body = TextStyle(
     fontSize: 15,
     fontWeight: FontWeight.w400,
@@ -75,11 +73,13 @@ class ElenaText {
 class ElenaCard extends StatelessWidget {
   final Widget child;
   final EdgeInsets padding;
+  final Color? color;
 
   const ElenaCard({
     super.key,
     required this.child,
     this.padding = const EdgeInsets.all(20),
+    this.color,
   });
 
   @override
@@ -87,7 +87,7 @@ class ElenaCard extends StatelessWidget {
     return Container(
       padding: padding,
       decoration: BoxDecoration(
-        color: ElenaColors.card,
+        color: color ?? ElenaColors.card,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -109,6 +109,7 @@ class ElenaInput extends StatelessWidget {
   final TextInputType? keyboardType;
   final String? Function(String?)? validator;
   final bool obscure;
+  final bool obscureText;
 
   const ElenaInput({
     super.key,
@@ -117,6 +118,7 @@ class ElenaInput extends StatelessWidget {
     this.keyboardType,
     this.validator,
     this.obscure = false,
+    this.obscureText = false, // compatibilidad
   });
 
   @override
@@ -258,6 +260,75 @@ class ElenaProgressBar extends StatelessWidget {
         value: progress,
         color: ElenaColors.primary,
         backgroundColor: Colors.grey.shade300,
+      ),
+    );
+  }
+}
+
+/// ------------------- SIMPLE PROGRESS BAR (Dashboard) -------------------
+class ElenaProgressBarSimple extends StatelessWidget {
+  final double value;
+
+  const ElenaProgressBarSimple({super.key, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: LinearProgressIndicator(
+        minHeight: 10,
+        value: value.clamp(0, 1),
+        color: ElenaColors.primary,
+        backgroundColor: Colors.grey.shade300,
+      ),
+    );
+  }
+}
+
+/// ------------------- QUICK ACTION BUTTON -------------------
+class ElenaQuickActionButton extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  const ElenaQuickActionButton({
+    super.key,
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        width: 80,
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 6,
+              offset: Offset(0, 3),
+            )
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 28, color: ElenaColors.primary),
+            const SizedBox(height: 6),
+            Text(
+              label,
+              style: ElenaText.label.copyWith(fontSize: 12),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }
